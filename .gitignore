@@ -26,3 +26,4 @@ infra/migrations/versions/*.pyc
 # macOS
 .DS_Store
 .vercel
+.env.local
