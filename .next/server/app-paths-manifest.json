@@ -1,0 +1,11 @@
+{
+  "/api/predictions/route": "app/api/predictions/route.js",
+  "/api/cron/route": "app/api/cron/route.js",
+  "/api/risk-scores/route": "app/api/risk-scores/route.js",
+  "/api/research/list/route": "app/api/research/list/route.js",
+  "/(dashboard)/page": "app/(dashboard)/page.js",
+  "/(dashboard)/research/page": "app/(dashboard)/research/page.js",
+  "/(dashboard)/predict/page": "app/(dashboard)/predict/page.js",
+  "/(dashboard)/portfolio/page": "app/(dashboard)/portfolio/page.js",
+  "/(dashboard)/admin/page": "app/(dashboard)/admin/page.js"
+}

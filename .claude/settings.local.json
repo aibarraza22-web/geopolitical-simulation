@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip3 --version)",
+      "Bash(docker --version)",
+      "Bash(pnpm --version)",
+      "Bash(yarn --version)",
+      "Bash(npm --version)",
+      "Bash(ls /Users/AidenBarraza/geopolitical-simulation/src/app/\\\\\\(dashboard\\\\\\)/)",
+      "Bash(ls /Users/AidenBarraza/geopolitical-simulation/src/app/\\\\\\(dashboard\\\\\\)/_components/)"
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.env
+dist/
+*.egg
+
+# Node
+node_modules/
+.pnpm-store/
+apps/web/dist/
+
+# Alembic
+infra/migrations/versions/*.pyc
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Docker
+*.log
+
+# macOS
+.DS_Store
+.vercel

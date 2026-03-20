@@ -1,0 +1,424 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================================================
+   AXIOM Design System — Global Styles
+   ============================================================================= */
+
+:root {
+  /* Core colors */
+  --color-body: #080c12;
+  --color-panel: #0d1520;
+  --color-border: rgba(255, 255, 255, 0.07);
+  --color-border-active: rgba(255, 255, 255, 0.15);
+
+  /* Accent colors */
+  --color-amber: #f0a500;
+  --color-cyan: #00d4ff;
+  --color-red: #ff3b3b;
+  --color-green: #00e676;
+
+  /* Text */
+  --color-text-primary: rgba(255, 255, 255, 0.92);
+  --color-text-secondary: rgba(255, 255, 255, 0.55);
+  --color-text-muted: rgba(255, 255, 255, 0.35);
+
+  /* Fonts */
+  --font-display: var(--font-bebas, "Impact", sans-serif);
+  --font-mono: var(--font-share-tech, "Courier New", monospace);
+  --font-ui: var(--font-barlow, "system-ui", sans-serif);
+}
+
+/* =============================================================================
+   Base Reset & Body
+   ============================================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-body);
+  color: var(--color-text-primary);
+  font-family: var(--font-ui);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Scanline texture overlay */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+  background-size: 100% 4px;
+}
+
+/* Grid background for panels */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0.015) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.5;
+}
+
+/* =============================================================================
+   Custom Scrollbar
+   ============================================================================= */
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-body);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(240, 165, 0, 0.3);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(240, 165, 0, 0.6);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(240, 165, 0, 0.3) var(--color-body);
+}
+
+/* =============================================================================
+   Typography
+   ============================================================================= */
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.05em;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.font-ui {
+  font-family: var(--font-ui);
+}
+
+/* =============================================================================
+   AXIOM Component Classes
+   ============================================================================= */
+
+/* Panel card */
+.axiom-card {
+  background-color: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.axiom-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(240, 165, 0, 0.4),
+    transparent
+  );
+}
+
+/* Input fields */
+.axiom-input {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  color: var(--color-text-primary);
+  font-family: var(--font-ui);
+  padding: 0.5rem 0.75rem;
+  transition: border-color 0.15s ease;
+  width: 100%;
+}
+
+.axiom-input:focus {
+  outline: none;
+  border-color: rgba(240, 165, 0, 0.5);
+  box-shadow: 0 0 0 2px rgba(240, 165, 0, 0.1);
+}
+
+.axiom-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Select */
+.axiom-select {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  color: var(--color-text-primary);
+  font-family: var(--font-ui);
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  width: 100%;
+}
+
+.axiom-select:focus {
+  outline: none;
+  border-color: rgba(240, 165, 0, 0.5);
+}
+
+.axiom-select option {
+  background-color: var(--color-panel);
+}
+
+/* Textarea */
+.axiom-textarea {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  color: var(--color-text-primary);
+  font-family: var(--font-ui);
+  padding: 0.625rem 0.75rem;
+  resize: vertical;
+  width: 100%;
+  min-height: 100px;
+  transition: border-color 0.15s ease;
+  line-height: 1.5;
+}
+
+.axiom-textarea:focus {
+  outline: none;
+  border-color: rgba(240, 165, 0, 0.5);
+  box-shadow: 0 0 0 2px rgba(240, 165, 0, 0.1);
+}
+
+/* Label */
+.axiom-label {
+  color: var(--color-text-secondary);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: var(--font-ui);
+  display: block;
+  margin-bottom: 0.375rem;
+}
+
+/* Divider */
+.axiom-divider {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 0;
+}
+
+/* Status dot */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.status-dot-live {
+  background-color: var(--color-green);
+  box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7);
+  animation: status-pulse 2s infinite;
+}
+
+.status-dot-warning {
+  background-color: var(--color-amber);
+  box-shadow: 0 0 0 0 rgba(240, 165, 0, 0.7);
+  animation: status-pulse 2s infinite;
+}
+
+.status-dot-critical {
+  background-color: var(--color-red);
+  box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7);
+  animation: status-pulse 1s infinite;
+}
+
+@keyframes status-pulse {
+  0% {
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  70% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+/* Glow effects */
+.glow-amber {
+  text-shadow: 0 0 20px rgba(240, 165, 0, 0.5);
+}
+
+.glow-cyan {
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+.glow-red {
+  text-shadow: 0 0 20px rgba(255, 59, 59, 0.5);
+}
+
+.glow-green {
+  text-shadow: 0 0 20px rgba(0, 230, 118, 0.5);
+}
+
+/* Risk score gauge fill */
+.risk-bar {
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.risk-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Streaming text cursor */
+.streaming-cursor::after {
+  content: "▋";
+  animation: blink 0.7s step-end infinite;
+  color: var(--color-amber);
+}
+
+@keyframes blink {
+  from, to { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Table styles */
+.axiom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.axiom-table th {
+  color: var(--color-text-muted);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.625rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.axiom-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 0.875rem;
+}
+
+.axiom-table tr:hover td {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* =============================================================================
+   Utility Animations
+   ============================================================================= */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-slide-left {
+  animation: slideInLeft 0.3s ease-out forwards;
+}
+
+.animate-slide-right {
+  animation: slideInRight 0.3s ease-out forwards;
+}
+
+/* Stagger delays */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+
+/* =============================================================================
+   Map Styles
+   ============================================================================= */
+
+.rsm-geography {
+  outline: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.rsm-geography:hover {
+  opacity: 0.8;
+}
+
+/* =============================================================================
+   Selection
+   ============================================================================= */
+
+::selection {
+  background-color: rgba(240, 165, 0, 0.25);
+  color: #fff;
+}
