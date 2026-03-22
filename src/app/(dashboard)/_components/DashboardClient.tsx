@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Activity, AlertTriangle, Radio, Globe, Brain, TrendingUp, Clock } from "lucide-react";
+import { Activity, AlertTriangle, Radio, Globe, Brain, TrendingUp, Clock, RefreshCw } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { SignalFeed } from "@/components/feed/SignalFeed";
@@ -112,6 +112,8 @@ export function DashboardClient({
   const [bootstrapping, setBootstrapping] = useState(false);
   const [bootstrapMsg, setBootstrapMsg] = useState<string | null>(null);
   const [topPredictions, setTopPredictions] = useState<Prediction[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
 
   useEffect(() => {
     // Trigger a background signal refresh via cron endpoint (no-op if recent)
@@ -168,6 +170,19 @@ export function DashboardClient({
       setBootstrapMsg("Failed to trigger bootstrap. Check your connection.");
     } finally {
       setBootstrapping(false);
+    }
+  };
+
+  const handleRefreshFeed = async () => {
+    setRefreshing(true);
+    try {
+      await fetch("/api/cron?force=true");
+      setLastRefreshed(new Date());
+      router.refresh();
+    } catch {
+      // silently fail
+    } finally {
+      setRefreshing(false);
     }
   };
 
@@ -313,9 +328,31 @@ export function DashboardClient({
         transition={{ delay: 0.13 }}
       >
         <Card padding="none" className="overflow-hidden" style={{ maxHeight: 480 }}>
+          <div className="px-4 py-2.5 border-b border-white/[0.07] flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Radio size={12} className="text-axiom-cyan" />
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-white/60 font-ui">
+                Live Signal Feed
+              </span>
+              <LiveIndicator />
+              {lastRefreshed && (
+                <span className="text-[9px] font-mono text-white/25">
+                  Updated {lastRefreshed.toLocaleTimeString()}
+                </span>
+              )}
+            </div>
+            <button
+              onClick={() => void handleRefreshFeed()}
+              disabled={refreshing}
+              className="flex items-center gap-1 text-[10px] font-mono text-axiom-cyan hover:text-axiom-cyan/80 transition-colors disabled:opacity-40"
+            >
+              <RefreshCw size={10} className={refreshing ? "animate-spin" : ""} />
+              {refreshing ? "Fetching..." : "Refresh"}
+            </button>
+          </div>
           <SignalFeed
             signals={recentSignals}
-            title="Live Signal Feed"
+            title=""
             maxItems={30}
             showFilters={true}
           />

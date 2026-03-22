@@ -6,6 +6,7 @@
 
 import { createClient } from "@supabase/supabase-js";
 import { fetchAllGdeltSignals } from "../lib/signal-processors/gdelt";
+import { fetchAllRssSignals } from "../lib/signal-processors/rss";
 import { calculateRiskScore, determineTrend } from "../lib/risk-engine";
 import type { Signal, RiskScore } from "../types";
 
@@ -80,13 +81,13 @@ export async function runBootstrap(force = false): Promise<{
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  // Skip if we ingested signals in the last 14 minutes (cron runs every 15)
+  // Skip if we ingested signals in the last 5 minutes (prevents hammering)
   if (!force) {
-    const fourteenMinutesAgo = new Date(Date.now() - 14 * 60 * 1000).toISOString();
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
     const { count } = await supabase
       .from("signals")
       .select("id", { count: "exact", head: true })
-      .gte("ingested_at", fourteenMinutesAgo);
+      .gte("ingested_at", fiveMinutesAgo);
 
     if ((count ?? 0) > 5) {
       return { signalsIngested: 0, regionsScored: 0, skipped: true };
@@ -95,9 +96,21 @@ export async function runBootstrap(force = false): Promise<{
 
   console.log("[Ingest] Fetching signals from GDELT + RSS...");
 
-  // GDELT monitors 65,000+ sources globally — no hardcoded sources needed
-  const gdeltRaw = await fetchAllGdeltSignals().catch(() => []);
-  const rawSignals: Partial<Signal>[] = gdeltRaw;
+  // Fetch GDELT and RSS in parallel — RSS is near real-time, GDELT has broader coverage
+  const [gdeltRaw, rssRaw] = await Promise.all([
+    fetchAllGdeltSignals().catch(() => []),
+    fetchAllRssSignals().catch(() => []),
+  ]);
+
+  // Merge and deduplicate by source_url
+  const seenUrls = new Set<string>();
+  const rawSignals: Partial<Signal>[] = [];
+  for (const sig of [...rssRaw, ...gdeltRaw]) {
+    const url = sig.source_url ?? "";
+    if (url && seenUrls.has(url)) continue;
+    if (url) seenUrls.add(url);
+    rawSignals.push(sig);
+  }
 
   console.log(`[Ingest] ${rawSignals.length} raw signals fetched`);
 
